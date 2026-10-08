@@ -1,7 +1,8 @@
 # ArthBodh error analysis (PDF section 8)
 
-Main method: **Embedding Lesk, Hindi mode** on test set 1 (1,600 auto-built sentences).
-It is wrong on 689 sentences (accuracy 56.9%). Helper to reproduce or browse more cases:
+Main method at the time of this analysis: **Embedding Lesk, Hindi mode** with LaBSE only, on test set 1
+(1,600 auto-built sentences). It was wrong on 689 sentences (accuracy 56.9%). The analysis led to two
+improvements (the lookup fix below and the two-model method in the last section), which raised Hindi mode to 65.6%. Helper to reproduce or browse more cases:
 
 ```bash
 python -m src.error_analysis                 # 10 random wrong answers with gold and predicted glosses
@@ -136,3 +137,38 @@ physical, ornamental reading. Overall, English mode fixes 117 Hindi-mode errors 
 | Fine-grained or duplicate senses | 7, 9 | Merge near-duplicate synsets; report top-2 accuracy |
 | Short / abstract gloss | 8 | Extended Lesk: add glosses of related synsets |
 | Misleading English context | 10 | Lower `w_en`; only use English when Hindi confidence is low |
+
+## After the improvement: LaBSE + HindSBERT + sense-order prior
+
+The error analysis suggested that glosses alone are a weak signal (cases 1, 8) and that close calls are
+common (42% of errors had the gold sense in second place). We therefore tried, on the even rows of
+test set 1 only, (a) four other sentence encoders, (b) adding synonyms and related-synset glosses
+(Extended Lesk) to each sense, and (c) a small prior for IndoWordNet's earlier (more common) senses.
+The best combination averages **LaBSE** (gloss + examples) and **L3Cube HindSBERT** (synonyms + gloss +
+examples) and subtracts `0.1 × i / n` from sense *i* of *n*. Model selection details: `results/model_selection.md`.
+
+| Test set 1 | LaBSE only | LaBSE + HindSBERT + prior |
+|---|---|---|
+| Hindi mode | 56.9% | **65.6%** |
+| English mode | 61.4% | **69.7%** |
+| Hindi mode, top-2 | 74.9% | 80.8% |
+| Wrong answers | 689 | 550 |
+
+The ten cases above with the new method:
+
+| # | Word | Now | Comment |
+|---|---|---|---|
+| 1 | मान | ✅ correct | Synonyms सम्मान, आदर in the sense text match the context of honour |
+| 2 | आम | ❌ | Still a POS-tag error: the mango sense is filtered out before scoring |
+| 3 | कर | ❌ (label wrong) | ArthBodh says "do"; the auto-label "hand" is wrong |
+| 4 | मूल | ❌ (label wrong) | ArthBodh says "fundamental", which is right; the auto-label "plant root" is wrong |
+| 5 | कल | ❌ | Now says "tomorrow" for आए थे; tense is still not modelled |
+| 6 | कल | ❌ | Same, confidence 0.023 |
+| 7 | काल | ❌ | "era" vs "time"; confidence 0.000, shown as unsure |
+| 8 | जाल | ❌ | Now "an old kind of cannon"; the abstract "network" gloss is still too weak |
+| 9 | चाल | ❌ | Now "a move in chess or cards"; 15 near-duplicate senses |
+| 10 | हार | ✅ correct (English mode) | HindSBERT is less distracted by "at the hands of" |
+
+Remaining errors: 90 of 550 have an unreachable gold sense (lemma, POS or label problems), 242 have the gold
+sense in second place. English mode now fixes 103 Hindi-mode errors and introduces 38. The weakest words are
+गति (36%), कर and मूल (38%, mostly label noise), जाल (40%), चाल (42%) and काल (48%).

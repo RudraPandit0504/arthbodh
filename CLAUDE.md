@@ -10,7 +10,7 @@ proposing design changes. The README covers setup and usage.
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate   # or: uv venv --python 3.12 .venv
 pip install -r requirements.txt                          # or: uv pip install --python .venv/bin/python -r requirements.txt
-python setup_models.py    # Stanza hi + IndoWordNet (~/iwn_data) + LaBSE (~2 GB HF cache)
+python setup_models.py    # Stanza hi + IndoWordNet (~/iwn_data) + LaBSE + HindSBERT (~3 GB HF cache)
 python -m src.engine      # smoke test: फल -> 2035 (result) and 662 (fruit)
 streamlit run app.py
 ```
@@ -26,8 +26,9 @@ streamlit run app.py
 `src/translate.py` (Google, then MyMemory fallback; returns None on failure) → `src/nlp.py`
 (Stanza, cached) → `src/wordnet.py` (pyiwn; `lookup()` tries lemma → surface → nukta-free → suffix-stripped, preferring the first form with a sense of the tagged POS;
 POS filter falls back to all senses) → `src/lesk.py` (Simplified Lesk) / `src/embed_lesk.py`
-(LaBSE, gloss vectors cached per synset id) → `src/engine.py` `analyse()` → `app.py` (Streamlit).
-Evaluation: `src/build_testset.py`, `src/evaluate.py` (`--limit N`, `--charts-only`), `src/label_tool.py`, `src/error_analysis.py`.
+(LaBSE + HindSBERT averaged, sense-order prior 0.1, gloss vectors cached per (model, synset id); fp16 on GPU) → `src/engine.py` `analyse()` → `app.py` (Streamlit).
+Evaluation: `src/build_testset.py`, `src/evaluate.py` (`--limit N`, `--charts-only`), `src/label_tool.py` (`--review/--merge/--handcheck`), `src/error_analysis.py`, `src/collect_sentences.py`.
+Model selection: `experiments/` → `results/model_selection.md`.
 
 Facts that aren't obvious from the code:
 - In pyiwn, `synset.pos()` returns a plain string (`'noun'`, `'verb'`, `'adjective'`, `'adverb'`).
@@ -37,6 +38,9 @@ Facts that aren't obvious from the code:
 - Google Translate's free endpoint rate-limits easily (`TooManyRequests`), which is why the MyMemory fallback exists.
 - Hindi mode works offline once models are downloaded; English mode needs internet.
 - Matplotlib Devanagari fonts have no Latin glyphs, so charts use `["DejaVu Sans", <devanagari font>]`.
+- The 4 GB GTX 1650 Ti runs out of memory with both encoders in fp32, hence `model.half()` on CUDA.
+- hi.wikipedia rate-limits (HTTP 429); `collect_sentences.py` retries with Retry-After and sleeps 1 s per request.
+- The unsure threshold `UNSURE_GAP = 0.02` (engine.py) was calibrated on test set 1: below it, answers are ~49% right.
 
 ## Status (as of 2026-10-08)
 
@@ -45,22 +49,28 @@ Done (PDF steps 1–9):
 - Test set 1: `data/test_auto.csv`, 1,600 rows, 32 words × 50, senses balanced round-robin.
 - `data/test_auto_handcheck.csv`: 100 random rows for the human auto-label check.
 - Evaluation results in `results/` (see `results/README.md`).
-  Test set 1: first sense 38.8 · Simplified Lesk 43.4 · Embedding Lesk HI 56.9 · EN 61.4 (`w_en` 0.5 is best).
+  Test set 1: first sense 38.8 · Simplified Lesk 43.4 · Embedding Lesk HI 65.6 · EN 69.7
+  (LaBSE-only original: 56.9 / 61.4, kept as comparison rows). `w_en` 0.7 scores 70.6 but stays 0.5,
+  since English mode on test set 1 is inflated by the answer keyword anyway.
+- Accuracy improvement: LaBSE + HindSBERT (synonyms in sense text) + sense-order prior, chosen on even rows of
+  test set 1 and confirmed on odd rows (`results/model_selection.md`).
 - Error analysis (PDF §8): `results/error_analysis.md`, 10 explained cases + cause table; browse with `python -m src.error_analysis`.
   It led to a POS-aware `lookup()` fix (Stanza lemmatizes the noun मान as the verb मानना): मान 18% → 60%.
   It also showed test set 1 label noise: most कर and मूल "errors" are auto-label mistakes ("hand", "root cause").
 
 To do (needs humans or is still open):
-1. **Test set 2**: `data/test_manual.csv` holds only 20 *seed* rows (`source=seed`) that Claude
-   wrote for demo and testing. They are not from news or Wikipedia. The team must hand-label 150–200 real
-   sentences with `python -m src.label_tool` (two labellers, resolve disagreements), then decide whether
-   to drop the seed rows, and re-run `python -m src.evaluate`. The 95% on test set 2 is from the seeds only
-   and must not be reported as a real result.
-2. **Auto-label check**: fill a `label_ok` column (1/0) in `data/test_auto_handcheck.csv` and report the share that is correct.
+1. **Test set 2 labelling (humans only)**: `data/test_manual_draft.csv` has 199 real hi.wikipedia sentences,
+   unlabelled. Two members run `python -m src.label_tool --review data/test_manual_draft.csv --labeller a` / `b`,
+   then `--merge`, settle disagreements with `--labeller final`, `--merge` again, and `python -m src.evaluate`.
+   Never fill labeller columns on the team's behalf. The 20 `source=seed` rows in test_manual.csv were written by
+   Claude for demos; `evaluate.py` excludes them unless `--with-seeds`.
+2. **Auto-label check (humans only)**: `python -m src.label_tool --handcheck` fills `label_ok` in
+   `data/test_auto_handcheck.csv`. Error analysis suggests कर/मूल labels are often wrong.
 3. Report and presentation (PDF Step 10). Possible extensions are in PDF §10 (Extended Lesk with hypernyms, Marathi).
 
 ## Conventions
 
 - Keep the code simple and explainable for the viva. The PDF's code is the reference style.
 - Never invent synset ids. Verify them with `src.wordnet._all_senses(word)` before writing labels or keywords.
-- Commit messages end with the Claude co-author line. The repo is private: github.com/RudraPandit0504/arthbodh.
+- Commit as `RudraPandit0504 <rudra.pandit0504@gmail.com>`; messages end with the Claude co-author line.
+  Repo: github.com/RudraPandit0504/arthbodh (public on GitHub).

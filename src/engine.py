@@ -5,7 +5,7 @@ from .translate import hi_to_en
 from .wordnet import lookup
 
 METHODS = ["first_sense", "simplified_lesk", "embedding_lesk"]
-UNSURE_GAP = 0.03  # confidence below this is shown as "unsure"
+UNSURE_GAP = 0.02  # confidence below this is shown as "unsure" (lowest quarter, ~49% accurate)
 
 
 def disambiguate(method, hi_sentence, lemma, senses, en_sentence=None, w_en=0.5):

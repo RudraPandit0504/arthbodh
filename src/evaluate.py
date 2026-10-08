@@ -1,6 +1,8 @@
 """Step 9: evaluate every method on both test sets and produce tables and charts.
 
-    python -m src.evaluate [--limit N]
+    python -m src.evaluate [--limit N] [--with-seeds]
+
+Test set 2 leaves out the 20 `source=seed` demo sentences unless --with-seeds is given.
 
 Writes results/results.csv (summary), results/per_word.csv, results/predictions.csv,
 results/w_en_sweep.csv, results/README.md and bar charts.
@@ -26,6 +28,8 @@ VARIANTS = [  # name, method, use English sentence, use POS filter
     ("Embedding Lesk, English mode", "embed", True, True),
     ("Simplified Lesk (no POS filter)", "lesk", False, False),
     ("Embedding Lesk, Hindi mode (no POS filter)", "embed", False, False),
+    ("Embedding Lesk, Hindi mode (LaBSE only, no prior)", "embed_labse", False, True),
+    ("Embedding Lesk, English mode (LaBSE only, no prior)", "embed_labse", True, True),
 ]
 W_EN_SWEEP = [0.3, 0.5, 0.7]
 
@@ -49,6 +53,8 @@ def run_method(method, hi, form, senses, en, w_en=0.5):
         return list(range(len(senses))), None
     if method == "lesk":
         _, scores = simplified_lesk(hi, form, senses)
+    elif method == "embed_labse":  # the original single-model method, for comparison
+        _, scores = embedding_lesk(hi, senses, en, w_en, models=("labse",), prior=0)
     else:
         _, scores = embedding_lesk(hi, senses, en, w_en)
     order = sorted(range(len(senses)), key=lambda i: (-scores[i], i))
@@ -169,7 +175,10 @@ def write_report(summary, sweep, n_auto, n_manual, path):
         cells = []
         for ts in ["auto", "manual"]:
             m = summary[(summary.variant == v) & (summary.test_set == ts)]
-            cells.append(fmt(m.accuracy.iloc[0]) if len(m) else "not applicable")
+            if len(m):
+                cells.append(fmt(m.accuracy.iloc[0]))
+            else:
+                cells.append("pending" if ts == "manual" and n_manual == 0 else "not applicable")
         lines.append(f"| {v} | {cells[0]} | {cells[1]} |")
     lines += ["", "## Details", "", summary.round(1).to_markdown(index=False), "",
               "## English weight sweep (Embedding Lesk, English mode, test set 1)", "",
@@ -178,6 +187,10 @@ def write_report(summary, sweep, n_auto, n_manual, path):
               "the answer keyword; Hindi mode and test set 2 are the honest measure. "
               "`gold_in_candidates` is how often the gold sense survives lookup + POS filter "
               "(the upper bound for any method). Confidence split is at the median score gap.",
+              "",
+              "Embedding Lesk averages LaBSE and L3Cube HindSBERT scores and adds a small sense-order "
+              "prior (src/embed_lesk.py). Models and prior were chosen on the even rows of test set 1 "
+              "and checked on the odd rows; the 'LaBSE only, no prior' rows are the original method.",
               "", "Charts: `accuracy.png`, `per_word.png`."]
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -189,10 +202,12 @@ def charts_only():
     print(f"Charts redrawn in {RESULTS}")
 
 
-def main(limit=None):
+def main(limit=None, with_seeds=False):
     RESULTS.mkdir(exist_ok=True)
     auto = pd.read_csv(DATA / "test_auto.csv")
     manual = pd.read_csv(DATA / "test_manual.csv")
+    if not with_seeds:
+        manual = manual[manual.source != "seed"]
     if limit:
         auto = auto.sample(min(limit, len(auto)), random_state=0)
     print(f"Test set 1: {len(auto)} rows, test set 2: {len(manual)} rows")
@@ -228,7 +243,9 @@ def main(limit=None):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--limit", type=int, help="evaluate on a random subset of test set 1")
+    ap.add_argument("--with-seeds", action="store_true",
+                    help="keep the 20 seed demo sentences in test set 2")
     ap.add_argument("--charts-only", action="store_true",
                     help="redraw charts from results/*.csv without re-evaluating")
     args = ap.parse_args()
-    charts_only() if args.charts_only else main(args.limit)
+    charts_only() if args.charts_only else main(args.limit, args.with_seeds)

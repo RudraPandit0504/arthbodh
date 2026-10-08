@@ -11,11 +11,12 @@ from src.translate import en_to_hi, hi_to_en
 st.set_page_config(page_title="ArthBodh", page_icon="📖", layout="centered")
 
 
-@st.cache_resource(show_spinner="Loading Stanza, IndoWordNet and LaBSE (first run only)...")
+@st.cache_resource(show_spinner="Loading Stanza, IndoWordNet, LaBSE and HindSBERT (first run only)...")
 def load_models():
     nlp.get_pipeline()
     wordnet.get_iwn()
-    embed_lesk.get_model()
+    for name in embed_lesk.DEFAULT_MODELS:
+        embed_lesk.get_model(name)
     return True
 
 
@@ -46,7 +47,7 @@ def sense_line(sense, show_en=True):
 
 st.title("ArthBodh · अर्थबोध")
 st.caption("Context-aware meaning finder for Hindi words — knowledge-based Word Sense "
-           "Disambiguation with IndoWordNet, Simplified Lesk and Embedding Lesk (LaBSE).")
+           "Disambiguation with IndoWordNet, Simplified Lesk and Embedding Lesk (LaBSE + HindSBERT).")
 
 load_models()
 
@@ -120,8 +121,9 @@ with st.expander(f"Other meanings of {r['form']}"):
         st.markdown(f"- `{r['scores'][i]:.3f}` " + sense_line(s, show_en))
 
 with st.expander("Compare methods"):
-    st.markdown("**Embedding Lesk (main)** — LaBSE similarity between the sentence"
-                + (" (Hindi + English)" if en else "") + " and each gloss:")
+    st.markdown("**Embedding Lesk (main)** — average LaBSE and HindSBERT similarity between "
+                "the sentence" + (" (Hindi + English)" if en else "") + " and each gloss, with a "
+                "small preference for more common senses:")
     st.markdown(sense_line(r["sense"], False))
     st.markdown("**Simplified Lesk (baseline)** — shared content words between the "
                 "sentence and each gloss + examples:")
