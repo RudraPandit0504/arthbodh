@@ -19,15 +19,15 @@ streamlit run app.py
 - Always run modules as `python -m src.<name>` from the repo root, because they use relative imports.
 - Not in git and recreated on demand: `.venv/`, `data/raw/` (the IITB corpus parquet, ~180 MB, which
   `build_testset.py` re-downloads only if you rebuild test set 1), plus the model caches in the home directory.
-- No GPU is required. LaBSE uses CUDA if present, otherwise CPU (the full evaluation then takes ~10–20 min).
+- No GPU is required. LaBSE uses CUDA if present (full evaluation ~5 min on a GTX 1650 Ti), otherwise CPU (~10–20 min).
 
 ## Code map
 
 `src/translate.py` (Google, then MyMemory fallback; returns None on failure) → `src/nlp.py`
-(Stanza, cached) → `src/wordnet.py` (pyiwn; `lookup()` tries lemma → surface → nukta-free → suffix-stripped;
+(Stanza, cached) → `src/wordnet.py` (pyiwn; `lookup()` tries lemma → surface → nukta-free → suffix-stripped, preferring the first form with a sense of the tagged POS;
 POS filter falls back to all senses) → `src/lesk.py` (Simplified Lesk) / `src/embed_lesk.py`
 (LaBSE, gloss vectors cached per synset id) → `src/engine.py` `analyse()` → `app.py` (Streamlit).
-Evaluation: `src/build_testset.py`, `src/evaluate.py` (`--limit N`, `--charts-only`), `src/label_tool.py`.
+Evaluation: `src/build_testset.py`, `src/evaluate.py` (`--limit N`, `--charts-only`), `src/label_tool.py`, `src/error_analysis.py`.
 
 Facts that aren't obvious from the code:
 - In pyiwn, `synset.pos()` returns a plain string (`'noun'`, `'verb'`, `'adjective'`, `'adverb'`).
@@ -45,7 +45,10 @@ Done (PDF steps 1–9):
 - Test set 1: `data/test_auto.csv`, 1,600 rows, 32 words × 50, senses balanced round-robin.
 - `data/test_auto_handcheck.csv`: 100 random rows for the human auto-label check.
 - Evaluation results in `results/` (see `results/README.md`).
-  Test set 1: first sense 37.9 · Simplified Lesk 43.1 · Embedding Lesk HI 55.6 · EN 60.1 (`w_en` 0.5 is best).
+  Test set 1: first sense 38.8 · Simplified Lesk 43.4 · Embedding Lesk HI 56.9 · EN 61.4 (`w_en` 0.5 is best).
+- Error analysis (PDF §8): `results/error_analysis.md`, 10 explained cases + cause table; browse with `python -m src.error_analysis`.
+  It led to a POS-aware `lookup()` fix (Stanza lemmatizes the noun मान as the verb मानना): मान 18% → 60%.
+  It also showed test set 1 label noise: most कर and मूल "errors" are auto-label mistakes ("hand", "root cause").
 
 To do (needs humans or is still open):
 1. **Test set 2**: `data/test_manual.csv` holds only 20 *seed* rows (`source=seed`) that Claude
@@ -54,9 +57,7 @@ To do (needs humans or is still open):
    to drop the seed rows, and re-run `python -m src.evaluate`. The 95% on test set 2 is from the seeds only
    and must not be reported as a real result.
 2. **Auto-label check**: fill a `label_ok` column (1/0) in `data/test_auto_handcheck.csv` and report the share that is correct.
-3. **Error analysis** (PDF §8): pick 10 wrong answers from `results/predictions.csv` and explain each.
-   Weak words to study: मान, जाल, चाल, मूल, काल, कर (see `results/per_word.png`).
-4. Report and presentation (PDF Step 10). Possible extensions are in PDF §10 (Extended Lesk with hypernyms, Marathi).
+3. Report and presentation (PDF Step 10). Possible extensions are in PDF §10 (Extended Lesk with hypernyms, Marathi).
 
 ## Conventions
 

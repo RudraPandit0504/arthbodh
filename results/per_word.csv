@@ -137,11 +137,11 @@ target_word,variant,accuracy
 मत,"Embedding Lesk, Hindi mode (no POS filter)",56.00000000000001
 मत,Simplified Lesk,32.0
 मत,Simplified Lesk (no POS filter),32.0
-मान,Baseline: first sense,12.0
-मान,"Embedding Lesk, English mode",18.0
-मान,"Embedding Lesk, Hindi mode",18.0
+मान,Baseline: first sense,40.0
+मान,"Embedding Lesk, English mode",62.0
+मान,"Embedding Lesk, Hindi mode",60.0
 मान,"Embedding Lesk, Hindi mode (no POS filter)",18.0
-मान,Simplified Lesk,8.0
+मान,Simplified Lesk,20.0
 मान,Simplified Lesk (no POS filter),8.0
 मूल,Baseline: first sense,24.0
 मूल,"Embedding Lesk, English mode",30.0

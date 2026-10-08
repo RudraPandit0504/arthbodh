@@ -57,15 +57,16 @@ def strip_suffix(word):
 def lookup(word, use_pos=True):
     """Senses for an analysed word dict: lemma -> surface form -> suffix-stripped forms.
 
+    With use_pos, the first form that has a sense of the tagged POS wins, so a wrong lemma
+    (Stanza gives the noun मान the verb lemma मानना) does not hide the right senses.
     Returns (form_found, senses)."""
     candidates = [word["lemma"], word["text"], remove_nukta(word["lemma"]),
                   remove_nukta(word["text"]), *strip_suffix(word["text"])]
-    seen = set()
-    for form in candidates:
-        if form in seen:
-            continue
-        seen.add(form)
-        senses = get_senses(form, word.get("upos"), use_pos)
-        if senses:
-            return form, senses
-    return word["lemma"], []
+    found = [f for f in dict.fromkeys(candidates) if _all_senses(f)]
+    if not found:
+        return word["lemma"], []
+    wanted = POS_MAP.get(word.get("upos")) if use_pos else None
+    for form in found:
+        if wanted and any(wanted in s["pos"] for s in _all_senses(form)):
+            return form, get_senses(form, word.get("upos"), use_pos)
+    return found[0], get_senses(found[0], word.get("upos"), use_pos)

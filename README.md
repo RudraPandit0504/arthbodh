@@ -84,13 +84,14 @@ Current results on test set 1 (1,600 auto-labelled sentences, 32 ambiguous words
 
 | Variant | Accuracy (%) |
 |---|---|
-| Baseline: first listed sense | 37.9 |
-| Simplified Lesk | 43.1 |
-| Embedding Lesk, Hindi mode | 55.6 |
-| Embedding Lesk, English mode | 60.1 |
+| Baseline: first listed sense | 38.8 |
+| Simplified Lesk | 43.4 |
+| Embedding Lesk, Hindi mode | 56.9 |
+| Embedding Lesk, English mode | 61.4 |
 
 Test set 2 currently holds only 20 seed sentences. The real 150–200 hand-labelled sentences are
 still to be added with `src/label_tool.py`. Full tables and charts: `results/README.md`, `results/*.png`.
+Error analysis of 10 wrong answers: `results/error_analysis.md` (`python -m src.error_analysis` to browse more).
 
 ## Smoke test
 
