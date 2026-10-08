@@ -1,0 +1,12 @@
+test_set,variant,n,accuracy,top2_accuracy,gold_in_candidates,acc_high_conf,acc_low_conf
+auto,Baseline: first sense,1600,37.875,57.875,92.375,,
+auto,Simplified Lesk,1600,43.0625,62.4375,92.375,49.530956848030016,39.868667917448406
+auto,"Embedding Lesk, Hindi mode",1600,55.625,73.0625,92.375,66.70838548185232,44.625
+auto,"Embedding Lesk, English mode",1600,60.0625,75.9375,92.375,71.21401752190238,49.0
+auto,Simplified Lesk (no POS filter),1600,40.5,58.75,94.75,47.565543071161045,36.96060037523452
+auto,"Embedding Lesk, Hindi mode (no POS filter)",1600,55.3125,73.625,94.75,66.5,44.125
+manual,Baseline: first sense,20,50.0,80.0,100.0,,
+manual,Simplified Lesk,20,80.0,90.0,100.0,100.0,77.77777777777779
+manual,"Embedding Lesk, Hindi mode",20,95.0,100.0,100.0,100.0,90.0
+manual,Simplified Lesk (no POS filter),20,80.0,85.0,100.0,100.0,77.77777777777779
+manual,"Embedding Lesk, Hindi mode (no POS filter)",20,95.0,100.0,100.0,100.0,90.0

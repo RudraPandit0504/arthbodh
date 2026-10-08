@@ -13,6 +13,8 @@ The full design spec is in `Hindi Word Sense Disambiguation – NLP Mini Project
 
 ## Quick start (new laptop)
 
+If you use Claude Code, `CLAUDE.md` holds the project status and next steps.
+
 Requires Python 3.10–3.12 (3.13+ may not have torch/stanza wheels yet) and ~3 GB free disk.
 
 ```bash
@@ -70,14 +72,25 @@ Hindi sentence ─────────────────────�
 
 ```bash
 python -m src.build_testset          # downloads the IITB corpus (~1.6 M pairs) and writes data/test_auto.csv
-python -m src.evaluate               # writes results/results.csv, results/*.png
+python -m src.evaluate               # writes results/results.csv, results/*.png (--limit N for a quick run)
+python -m src.evaluate --charts-only # redraw charts from the saved CSVs
 python -m src.label_tool             # add hand-labelled rows to data/test_manual.csv
 ```
 
 Gold labels may list several synset ids separated by `|`. IndoWordNet often stores the same meaning
 twice (e.g. कल "yesterday" as both noun 617 and adverb 22207), and a prediction counts as correct if it matches any of them.
 
-See `results/README.md` for the latest numbers.
+Current results on test set 1 (1,600 auto-labelled sentences, 32 ambiguous words):
+
+| Variant | Accuracy (%) |
+|---|---|
+| Baseline: first listed sense | 37.9 |
+| Simplified Lesk | 43.1 |
+| Embedding Lesk, Hindi mode | 55.6 |
+| Embedding Lesk, English mode | 60.1 |
+
+Test set 2 currently holds only 20 seed sentences. The real 150–200 hand-labelled sentences are
+still to be added with `src/label_tool.py`. Full tables and charts: `results/README.md`, `results/*.png`.
 
 ## Smoke test
 

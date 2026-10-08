@@ -1,0 +1,193 @@
+target_word,variant,accuracy
+अंक,Baseline: first sense,34.0
+अंक,"Embedding Lesk, English mode",54.0
+अंक,"Embedding Lesk, Hindi mode",52.0
+अंक,"Embedding Lesk, Hindi mode (no POS filter)",52.0
+अंक,Simplified Lesk,50.0
+अंक,Simplified Lesk (no POS filter),50.0
+अर्थ,Baseline: first sense,50.0
+अर्थ,"Embedding Lesk, English mode",82.0
+अर्थ,"Embedding Lesk, Hindi mode",80.0
+अर्थ,"Embedding Lesk, Hindi mode (no POS filter)",80.0
+अर्थ,Simplified Lesk,46.0
+अर्थ,Simplified Lesk (no POS filter),46.0
+आम,Baseline: first sense,26.0
+आम,"Embedding Lesk, English mode",76.0
+आम,"Embedding Lesk, Hindi mode",76.0
+आम,"Embedding Lesk, Hindi mode (no POS filter)",72.0
+आम,Simplified Lesk,44.0
+आम,Simplified Lesk (no POS filter),24.0
+उत्तर,Baseline: first sense,48.0
+उत्तर,"Embedding Lesk, English mode",78.0
+उत्तर,"Embedding Lesk, Hindi mode",78.0
+उत्तर,"Embedding Lesk, Hindi mode (no POS filter)",76.0
+उत्तर,Simplified Lesk,66.0
+उत्तर,Simplified Lesk (no POS filter),72.0
+कर,Baseline: first sense,0.0
+कर,"Embedding Lesk, English mode",34.0
+कर,"Embedding Lesk, Hindi mode",36.0
+कर,"Embedding Lesk, Hindi mode (no POS filter)",36.0
+कर,Simplified Lesk,6.0
+कर,Simplified Lesk (no POS filter),6.0
+कल,Baseline: first sense,50.0
+कल,"Embedding Lesk, English mode",57.99999999999999
+कल,"Embedding Lesk, Hindi mode",54.0
+कल,"Embedding Lesk, Hindi mode (no POS filter)",57.99999999999999
+कल,Simplified Lesk,32.0
+कल,Simplified Lesk (no POS filter),32.0
+काल,Baseline: first sense,26.0
+काल,"Embedding Lesk, English mode",34.0
+काल,"Embedding Lesk, Hindi mode",34.0
+काल,"Embedding Lesk, Hindi mode (no POS filter)",34.0
+काल,Simplified Lesk,30.0
+काल,Simplified Lesk (no POS filter),30.0
+गति,Baseline: first sense,32.0
+गति,"Embedding Lesk, English mode",44.0
+गति,"Embedding Lesk, Hindi mode",34.0
+गति,"Embedding Lesk, Hindi mode (no POS filter)",34.0
+गति,Simplified Lesk,34.0
+गति,Simplified Lesk (no POS filter),34.0
+चाल,Baseline: first sense,0.0
+चाल,"Embedding Lesk, English mode",38.0
+चाल,"Embedding Lesk, Hindi mode",26.0
+चाल,"Embedding Lesk, Hindi mode (no POS filter)",26.0
+चाल,Simplified Lesk,30.0
+चाल,Simplified Lesk (no POS filter),30.0
+चोटी,Baseline: first sense,92.0
+चोटी,"Embedding Lesk, English mode",80.0
+चोटी,"Embedding Lesk, Hindi mode",74.0
+चोटी,"Embedding Lesk, Hindi mode (no POS filter)",74.0
+चोटी,Simplified Lesk,82.0
+चोटी,Simplified Lesk (no POS filter),82.0
+जाल,Baseline: first sense,32.0
+जाल,"Embedding Lesk, English mode",30.0
+जाल,"Embedding Lesk, Hindi mode",26.0
+जाल,"Embedding Lesk, Hindi mode (no POS filter)",26.0
+जाल,Simplified Lesk,28.000000000000004
+जाल,Simplified Lesk (no POS filter),28.000000000000004
+डाक,Baseline: first sense,0.0
+डाक,"Embedding Lesk, English mode",90.0
+डाक,"Embedding Lesk, Hindi mode",88.0
+डाक,"Embedding Lesk, Hindi mode (no POS filter)",88.0
+डाक,Simplified Lesk,28.000000000000004
+डाक,Simplified Lesk (no POS filter),28.000000000000004
+तीर,Baseline: first sense,88.0
+तीर,"Embedding Lesk, English mode",86.0
+तीर,"Embedding Lesk, Hindi mode",86.0
+तीर,"Embedding Lesk, Hindi mode (no POS filter)",82.0
+तीर,Simplified Lesk,72.0
+तीर,Simplified Lesk (no POS filter),30.0
+दल,Baseline: first sense,38.0
+दल,"Embedding Lesk, English mode",52.0
+दल,"Embedding Lesk, Hindi mode",50.0
+दल,"Embedding Lesk, Hindi mode (no POS filter)",50.0
+दल,Simplified Lesk,40.0
+दल,Simplified Lesk (no POS filter),40.0
+धन,Baseline: first sense,42.0
+धन,"Embedding Lesk, English mode",57.99999999999999
+धन,"Embedding Lesk, Hindi mode",46.0
+धन,"Embedding Lesk, Hindi mode (no POS filter)",46.0
+धन,Simplified Lesk,57.99999999999999
+धन,Simplified Lesk (no POS filter),56.00000000000001
+पत्ता,Baseline: first sense,70.0
+पत्ता,"Embedding Lesk, English mode",34.0
+पत्ता,"Embedding Lesk, Hindi mode",36.0
+पत्ता,"Embedding Lesk, Hindi mode (no POS filter)",36.0
+पत्ता,Simplified Lesk,56.00000000000001
+पत्ता,Simplified Lesk (no POS filter),56.00000000000001
+पत्र,Baseline: first sense,24.0
+पत्र,"Embedding Lesk, English mode",56.00000000000001
+पत्र,"Embedding Lesk, Hindi mode",48.0
+पत्र,"Embedding Lesk, Hindi mode (no POS filter)",48.0
+पत्र,Simplified Lesk,44.0
+पत्र,Simplified Lesk (no POS filter),44.0
+पद,Baseline: first sense,20.0
+पद,"Embedding Lesk, English mode",78.0
+पद,"Embedding Lesk, Hindi mode",74.0
+पद,"Embedding Lesk, Hindi mode (no POS filter)",74.0
+पद,Simplified Lesk,28.000000000000004
+पद,Simplified Lesk (no POS filter),28.000000000000004
+पानी,Baseline: first sense,50.0
+पानी,"Embedding Lesk, English mode",74.0
+पानी,"Embedding Lesk, Hindi mode",60.0
+पानी,"Embedding Lesk, Hindi mode (no POS filter)",60.0
+पानी,Simplified Lesk,44.0
+पानी,Simplified Lesk (no POS filter),44.0
+फल,Baseline: first sense,50.0
+फल,"Embedding Lesk, English mode",46.0
+फल,"Embedding Lesk, Hindi mode",50.0
+फल,"Embedding Lesk, Hindi mode (no POS filter)",50.0
+फल,Simplified Lesk,42.0
+फल,Simplified Lesk (no POS filter),42.0
+बाल,Baseline: first sense,50.0
+बाल,"Embedding Lesk, English mode",64.0
+बाल,"Embedding Lesk, Hindi mode",56.00000000000001
+बाल,"Embedding Lesk, Hindi mode (no POS filter)",57.99999999999999
+बाल,Simplified Lesk,42.0
+बाल,Simplified Lesk (no POS filter),44.0
+भाग,Baseline: first sense,38.0
+भाग,"Embedding Lesk, English mode",68.0
+भाग,"Embedding Lesk, Hindi mode",62.0
+भाग,"Embedding Lesk, Hindi mode (no POS filter)",62.0
+भाग,Simplified Lesk,46.0
+भाग,Simplified Lesk (no POS filter),46.0
+मत,Baseline: first sense,24.0
+मत,"Embedding Lesk, English mode",72.0
+मत,"Embedding Lesk, Hindi mode",56.00000000000001
+मत,"Embedding Lesk, Hindi mode (no POS filter)",56.00000000000001
+मत,Simplified Lesk,32.0
+मत,Simplified Lesk (no POS filter),32.0
+मान,Baseline: first sense,12.0
+मान,"Embedding Lesk, English mode",18.0
+मान,"Embedding Lesk, Hindi mode",18.0
+मान,"Embedding Lesk, Hindi mode (no POS filter)",18.0
+मान,Simplified Lesk,8.0
+मान,Simplified Lesk (no POS filter),8.0
+मूल,Baseline: first sense,24.0
+मूल,"Embedding Lesk, English mode",30.0
+मूल,"Embedding Lesk, Hindi mode",32.0
+मूल,"Embedding Lesk, Hindi mode (no POS filter)",26.0
+मूल,Simplified Lesk,30.0
+मूल,Simplified Lesk (no POS filter),20.0
+रस,Baseline: first sense,30.0
+रस,"Embedding Lesk, English mode",48.0
+रस,"Embedding Lesk, Hindi mode",46.0
+रस,"Embedding Lesk, Hindi mode (no POS filter)",46.0
+रस,Simplified Lesk,50.0
+रस,Simplified Lesk (no POS filter),50.0
+राशि,Baseline: first sense,36.0
+राशि,"Embedding Lesk, English mode",90.0
+राशि,"Embedding Lesk, Hindi mode",82.0
+राशि,"Embedding Lesk, Hindi mode (no POS filter)",82.0
+राशि,Simplified Lesk,54.0
+राशि,Simplified Lesk (no POS filter),54.0
+वर्ग,Baseline: first sense,50.0
+वर्ग,"Embedding Lesk, English mode",76.0
+वर्ग,"Embedding Lesk, Hindi mode",70.0
+वर्ग,"Embedding Lesk, Hindi mode (no POS filter)",70.0
+वर्ग,Simplified Lesk,48.0
+वर्ग,Simplified Lesk (no POS filter),48.0
+सर,Baseline: first sense,2.0
+सर,"Embedding Lesk, English mode",82.0
+सर,"Embedding Lesk, Hindi mode",76.0
+सर,"Embedding Lesk, Hindi mode (no POS filter)",76.0
+सर,Simplified Lesk,26.0
+सर,Simplified Lesk (no POS filter),26.0
+सोना,Baseline: first sense,57.99999999999999
+सोना,"Embedding Lesk, English mode",70.0
+सोना,"Embedding Lesk, Hindi mode",62.0
+सोना,"Embedding Lesk, Hindi mode (no POS filter)",62.0
+सोना,Simplified Lesk,54.0
+सोना,Simplified Lesk (no POS filter),38.0
+हाथ,Baseline: first sense,86.0
+हाथ,"Embedding Lesk, English mode",50.0
+हाथ,"Embedding Lesk, Hindi mode",44.0
+हाथ,"Embedding Lesk, Hindi mode (no POS filter)",44.0
+हाथ,Simplified Lesk,62.0
+हाथ,Simplified Lesk (no POS filter),62.0
+हार,Baseline: first sense,30.0
+हार,"Embedding Lesk, English mode",72.0
+हार,"Embedding Lesk, Hindi mode",68.0
+हार,"Embedding Lesk, Hindi mode (no POS filter)",68.0
+हार,Simplified Lesk,66.0
+हार,Simplified Lesk (no POS filter),66.0
