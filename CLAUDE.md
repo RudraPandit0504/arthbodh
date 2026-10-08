@@ -66,7 +66,12 @@ To do (needs humans or is still open):
    Claude for demos; `evaluate.py` excludes them unless `--with-seeds`.
 2. **Auto-label check (humans only)**: `python -m src.label_tool --handcheck` fills `label_ok` in
    `data/test_auto_handcheck.csv`. Error analysis suggests कर/मूल labels are often wrong.
-3. Report and presentation (PDF Step 10). Possible extensions are in PDF §10 (Extended Lesk with hypernyms, Marathi).
+3. When test set 2 is labelled: add its numbers to the report and to the results slide (both say "pending").
+
+Report and presentation (PDF Step 10) are drafted as private claude.ai artifacts (share them from their Share menu):
+- Report (Claude Doc): https://claude.ai/code/artifact/9a67e4df-941e-4df1-b4a5-29ec50e81e34
+- Viva deck (11 slides, speaker notes): https://claude.ai/artifact/Sz3oRKKG9jwT1gt7vTErHz
+Possible extensions are in PDF §10 (Marathi; Extended Lesk was tried in experiments/ and helped HindSBERT only slightly).
 
 ## Conventions
 
