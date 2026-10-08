@@ -1,0 +1,10 @@
+pyiwn
+stanza
+sentence-transformers
+torch
+deep-translator
+pandas
+scikit-learn
+matplotlib
+streamlit
+datasets
